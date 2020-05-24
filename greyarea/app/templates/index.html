@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Sous Vide Controller</h1>
+<p>
+    Run:
+    {% if run == true %}
+    Green
+    {% else %}
+    Red
+    {% endif%}
+    <form method="POST" action="/run/">
+        <input type="submit" value="On/Off">
+    </form>
+</p>
+<p>Temperature: {{ temp }} &deg;F</p>
+<p>
+    Relay:
+    {% if relay == true %}
+    Green
+    {% else %}
+    Red
+    {% endif %}
+</p>
+
+<p>
+    Setpoint: {{ setpoint }} &deg;F
+    <form method="POST" action="/setpoint/">
+        <input type="number" name="setpoint" value="{{ setpoint }}"> &deg;F
+        <input type="submit" value="Submit">
+    </form>
+</p>
+{% endblock %}
