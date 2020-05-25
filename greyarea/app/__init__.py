@@ -5,7 +5,7 @@ import threading
 app = Flask(__name__)
 app.config.from_object(DevConfig)
 
-from app import routes, control
+from app import routes, control, mock
 
 # Start the control thread if it isn't running
 if "ControlThread" not in [thread.name for thread in threading.enumerate()]:

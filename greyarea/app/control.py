@@ -1,36 +1,26 @@
 from app import app
-from gpiozero import OutputDevice
+import RPi.GPIO as GPIO
 import time
+
 
 # PID Tuning Constants
 P = 40
 I = 10
 D = 0
 
+
 # GPIO Configuration
 if app.config['GPIO']:
-    from gpiozero.pins.rpigpio import RPiGPIOFactory
-    Factory = RPiGPIOFactory()
+    import RPi.GPIO as GPIO
 else:
-    from gpiozero.pins.mock import MockFactory
-    Factory = MockFactory()
+    from app.mock import GPIO
 
-class Relay(OutputDevice):
-    def __init__(self, pin):
-        OutputDevice.__init__(self, pin=pin, active_high=True, initial_value=False, pin_factory=Factory)
 
 # OneWire Therm Sensor Configuration
 if app.config['ONEWIRE']:
     from w1thermsensor import W1ThermSensor
 else:
-    class W1ThermSensor():
-        DEGREES_F = 0x02
-
-        def __init__(self):
-            self.moctemp = 140
-
-        def get_temperature(self, unit):
-            return self.moctemp
+    from app.mock import W1ThermSensor
 
 
 # External Values, Read-Only
@@ -41,13 +31,17 @@ Run = True
 Temp = 138.0
 RelayState = True
 
+
 def controlworker():
     global Setpoint
     global Run
     global Temp
     global RelayState
 
-    relay = Relay(app.config['RELAYPIN'])
+    relay = int(app.config['RELAYPIN'])
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(relay, GPIO.out, initial=GPIO.LOW)
+
     sensor = W1ThermSensor()
 
     lasterror = 0.0
@@ -86,9 +80,11 @@ def controlworker():
 
             # Set relay state
             if result > 0:
-                relay.on()
+                #relay.on()
+                GPIO.output(relay, GPIO.HIGH)
             else:
-                relay.off()
+                #relay.off()
+                GPIO.output(relay, GPIO.LOW)
         else:
             lasterror = 0.0
             errori = 0.0
@@ -97,7 +93,7 @@ def controlworker():
 
         # Publish values
         Temp = temp
-        RelayState = bool(relay.value)
+        RelayState = bool(GPIO.input(relay))
 
         # Sleep
         time.sleep(5)
