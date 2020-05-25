@@ -79,12 +79,11 @@ def controlworker():
 
             # Set relay state
             if result > 0:
-                #relay.on()
                 GPIO.output(relay, GPIO.HIGH)
             else:
-                #relay.off()
                 GPIO.output(relay, GPIO.LOW)
         else:
+            GPIO.output(relay, GPIO.LOW)
             lasterror = 0.0
             errori = 0.0
             errord = 0.0
