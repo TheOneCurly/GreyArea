@@ -1,0 +1,13 @@
+[Unit]
+Description=Sous Vide Controller Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi
+Environment=FLASK_APP=/home/pi/greyarea/greyarea.py
+ExecStart=/home/pi/greyarea/.env/bin/flask run --host=0.0.0.0
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
