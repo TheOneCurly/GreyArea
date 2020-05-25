@@ -1,5 +1,4 @@
 from app import app
-import RPi.GPIO as GPIO
 import time
 
 
@@ -40,7 +39,7 @@ def controlworker():
 
     relay = int(app.config['RELAYPIN'])
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(relay, GPIO.out, initial=GPIO.LOW)
+    GPIO.setup(relay, GPIO.OUT, initial=GPIO.LOW)
 
     sensor = W1ThermSensor()
 

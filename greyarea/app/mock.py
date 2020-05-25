@@ -7,11 +7,14 @@ class GPIO():
     def setmode(mode):
         pass
 
-    def setup(channel, mode):
+    def setup(channel, mode, initial):
         pass
 
     def output(channel, state):
         pass
+
+    def input(channel):
+        return 1
 
 class W1ThermSensor():
     DEGREES_F = 0x02
